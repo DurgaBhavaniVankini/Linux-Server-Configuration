@@ -126,7 +126,7 @@ allows you to install new packages when needed
   - create .ssh folder by `mkdir /home/grader/.ssh`
   - Run this command `cp /home/ubuntu/.ssh/authorized_keys /home/grader/.ssh/authorized_keys`
   - change ownership `chown grader.grader /home/grader/.ssh`
-  - add 'grader' to sudo group `usermod -aG sudo grader`
+  - add 'grader' to sudo group `usermod -a -G sudo grader`
   - change permissions for .ssh folder `chmod 0700 /home/grader/.ssh/`, for authorized_keys `chmod 644 authorized_keys`
   - Check in `vi /etc/ssh/sshd_config` file if `PermitRootLogin` is set to `no`
   - Restart SSH: `sudo service ssh restart`
@@ -170,10 +170,10 @@ allows you to install new packages when needed
 
 ## Deploy the  Flight Information System project
 
-### Step 12.1: Clone and setup Coffeeshop project from the GitHub repository 
+### Step 12.1: Clone and setup Flight project from the GitHub repository 
 
 - While logged in as `grader`,
-- From the `/var/www` directory, Clone the coffeeshop project:<br>
+- From the `/var/www` directory, Clone the flight project:<br>
 `sudo git clone https://github.com/DurgaBhavaniVankini/flight.git`.
 - Change the ownership of the `flight` directory to `grader` using: `sudo chown -R grader:grader flight/`.
 - Change to the `/var/www/flight/flight` directory.
