@@ -4,11 +4,11 @@
 
 Take a baseline installation of a Linux distribution on a virtual machine and prepare it to host your web applications, to include installing updates, securing it from a number of attack vectors and installing/configuring web and database servers.
 
-- IP address: 54.191.144.249
+- IP address: 52.33.75.158
 
 - Accessible SSH port: 2200
 
-- Application URL: http://54.191.144.249.xip.io/
+- Application URL: http://52.33.75.158.xip.io/
 
 ## What we need to do
 - Get server
@@ -24,10 +24,10 @@ Take a baseline installation of a Linux distribution on a virtual machine and pr
 
   - Login to *[aws.amazon.com](https://console.aws.amazon.com)* and login to default user (ubuntu)
   - Choose EC2 and Launch Instance with appropriate settings.
-  - Check for instance IPv4 public IP - 54.191.144.249
+  - Check for instance IPv4 public IP - 52.33.75.158
   - we can download a .pem file and connect with following command
     ```
-    ssh -i Item_Catalog1.pem ubuntu@54.191.144.249
+    ssh -i item_catalog.pem ubuntu@52.33.75.158
     ``` 
   - 22 is Port by Default,Later we need to change it to 2200 as per the
     udacity-linux-server-configuration rubrics.
@@ -55,7 +55,7 @@ allows you to install new packages when needed
 - Save and exit using esc and confirm with :wq.
 - Restart SSH: `sudo service ssh restart`.
 - Change inbound rules in Amazon EC2 --> Type : Custom TCP Rule as 2200
-- To check port 2200 wether working or not by `ssh -i Item_Catalog1.pem -p 2200 ubuntu@54.191.144.249` 
+- To check port 2200 wether working or not by `ssh -i item_catalog.pem -p 2200 ubuntu@52.33.75.158` 
 
 ### Step 4: Configure the Uncomplicated Firewall (UFW)
 
@@ -130,7 +130,7 @@ allows you to install new packages when needed
   - change permissions for .ssh folder `chmod 0700 /home/grader/.ssh/`, for authorized_keys `chmod 644 authorized_keys`
   - Check in `vi /etc/ssh/sshd_config` file if `PermitRootLogin` is set to `no`
   - Restart SSH: `sudo service ssh restart`
-  - On the local machine, cheking if the grader account working or not by running this command : `ssh -i Item_Catalog1.pem -p 2200 grader@54.191.144.249`.
+  - On the local machine, cheking if the grader account working or not by running this command : `ssh -i item_catalog.pem -p 2200 grader@52.33.75.158`.
 
 
 ## Prepare to deploy the project
@@ -154,12 +154,12 @@ allows you to install new packages when needed
   - `sudo apt-get install postgresql postgresql-contrib`
   - `sudo su - postgres`
   - `psql`
-  - `CREATE USER coffeeshop WITH PASSWORD 'coffeeshop';`
-  - `ALTER USER coffeeshop CREATEDB;`
-  - `CREATE DATABASE coffeeshopmenuwithusers WITH OWNER coffeeshop;`
-  - `\c coffeeshop`
+  - `CREATE USER flight WITH PASSWORD 'flight';`
+  - `ALTER USER flight CREATEDB;`
+  - `CREATE DATABASE flightsinfo WITH OWNER flight;`
+  - `\c flightsinfo`
   - `REVOKE ALL ON SCHEMA public FROM public;`
-  - `GRANT ALL ON SCHEMA public TO coffeeshop;`
+  - `GRANT ALL ON SCHEMA public TO flight;`
   - `\q`
   - `exit`
   - Switch back to the `grader` user: `exit`.
@@ -168,20 +168,20 @@ allows you to install new packages when needed
 
 - While logged in as `grader`, install `git`: `sudo apt-get install git`.
 
-## Deploy the  Coffeeshop project
+## Deploy the  Flight Information System project
 
 ### Step 12.1: Clone and setup Coffeeshop project from the GitHub repository 
 
 - While logged in as `grader`,
 - From the `/var/www` directory, Clone the coffeeshop project:<br>
-`sudo git clone https://github.com/LavanyaMoyya/coffeeshop.git`.
-- Change the ownership of the `coffeeshop` directory to `grader` using: `sudo chown -R grader:grader coffeeshop/`.
-- Change to the `/var/www/coffeeshop/coffeeshop` directory.
-- Rename the `project.py` file to `__init__.py` using: `mv project.py __init__.py`.
-- We need to change sqlite to postgresql create_engine in `__init__.py`,`database_setup.py` and `lotsofmenus.py`,
+`sudo git clone https://github.com/DurgaBhavaniVankini/flight.git`.
+- Change the ownership of the `flight` directory to `grader` using: `sudo chown -R grader:grader flight/`.
+- Change to the `/var/www/flight/flight` directory.
+- Rename the `Item.py` file to `__init__.py` using: `mv Item.py __init__.py`.
+- We need to change sqlite to postgresql create_engine in `__init__.py`,`database_setup.py` and `flightsinfodata.py`,
    ```
-   # engine = create_engine("sqlite:///coffeeshopmenuwithusers.db")
-   engine = create_engine('postgresql://coffeeshop:coffeesho[@localhost/coffeeshopmenuwithusers')
+   # engine = create_engine("sqlite:///flightsinfo.db")
+   engine = create_engine('postgresql://flight:flight@localhost/flightsinfo')
    ``` 
 
 ### Step 12.2: Authenticate login through Google
@@ -189,13 +189,13 @@ allows you to install new packages when needed
 - Go to [Google Cloud Platform](https://console.cloud.google.com/).
 - Click `APIs & services` on left menu.
 - Click `Credentials`.
-- Create an OAuth Client ID (under the Credentials tab), and add http://54.191.144.249.xip.io and 
-http://ec2-54-191-144-249.us-west-2.compute.amazonaws.com/ as authorized JavaScript 
+- Create an OAuth Client ID (under the Credentials tab), and add http://52.33.75.158.xip.io and 
+ec2-52-33-75-158.us-west-2.compute.amazonaws.com/ as authorized JavaScript 
 origins.
-- Add http://54.191.144.249.xip.io/login,http://54.191.144.249.xip.io/gconnect,http://54.191.144.249.xip.io/callback
+- Add http://52.33.75.158.xip.io/login,http://52.33.75.158.xip.io/gconnect,http://52.33.75.158.xip.io/callback
 as authorized redirect URI.
 - Download the corresponding JSON file, open it and copy the contents.
-- Open `/var/www/coffeeshop/coffeeshop/client_secrets.json` and paste the previous contents into the this file.
+- Open `/var/www/flight/flight/Gclient_secret.json` and paste the previous contents into the this file.
 - Replace the client ID `templates/login.html` file in the project directory.
 
 
@@ -203,7 +203,7 @@ as authorized redirect URI.
 
 - While logged in as `grader`, install pip: `sudo apt-get install python3-pip`.
 - Install the virtual environment: `sudo apt-get install python-virtualenv`
-- Change to the `/var/www/coffeeshop/coffeeshop/` directory.
+- Change to the `/var/www/flight/flight/` directory.
 - Create the virtual environment: `sudo virtualenv -p python3 venv3`.
 - Change the ownership to `grader` with: `sudo chown -R grader:grader venv3/`.
 - Activate the new environment: `. venv3/bin/activate`.
@@ -222,22 +222,22 @@ as authorized redirect URI.
 ### Step 13.2: Set up and enable a virtual host
 
   Configure and enable a new virtual host
-  - Run this: `sudo vi /etc/apache2/sites-available/coffeeshop.conf`
+  - Run this: `sudo vi /etc/apache2/sites-available/flight.conf`
   - Paste this code: 
   ```
   <VirtualHost *:80>
-      ServerName 54.191.144.249.xip.io
-      ServerAlias ec2-54-161-86-157.compute-1.amazonaws.com
-      ServerAdmin ubuntu@54.191.144.249
-      WSGIDaemonProcess coffeeshop python-path=/var/www/coffeeshop:/var/www/coffeeshop/coffeeshop/venv3/lib/python3.6/site-packages
-      WSGIProcessGroup coffeeshop
-      WSGIScriptAlias / /var/www/coffeeshop/coffeeshop.wsgi
-      <Directory /var/www/coffeeshop/coffeeshop/>
+      ServerName 52.33.75.158.xip.io
+      ServerAlias ec2-52-33-75-158.us-west-2.compute.amazonaws.com
+      ServerAdmin ubuntu@52.33.75.158
+      WSGIDaemonProcess coffeeshop python-path=/var/www/flight:/var/www/flight/flight/venv3/lib/python3.6/site-packages
+      WSGIProcessGroup flight
+      WSGIScriptAlias / /var/www/flight/flight.wsgi
+      <Directory /var/www/flight/flight/>
           Order allow,deny
           Allow from all
       </Directory>
-      Alias /static /var/www/coffeeshop/coffeeshop/static
-      <Directory /var/www/coffeeshop/coffeeshop/static/>
+      Alias /static /var/www/flight/flight/static
+      <Directory /var/www/flight/flight/static/>
           Order allow,deny
           Allow from all
       </Directory>
@@ -246,9 +246,9 @@ as authorized redirect URI.
       CustomLog ${APACHE_LOG_DIR}/access.log combined
   </VirtualHost>
   ```
-  - Enable the virtual host `sudo a2ensite coffeeshop`
+  - Enable the virtual host `sudo a2ensite flight`
 
-  Enabling site coffeeshop.
+  Enabling site flight.
   To activate the new configuration, you need to run:
     service apache2 reload
   
@@ -256,18 +256,18 @@ as authorized redirect URI.
 
 ### Step 13.3: Set up the Flask application
 
-- Create `/var/www/coffeeshop/coffeeshop/.wsgi` file add the following lines:
+- Create `/var/www/flight/flight/.wsgi` file add the following lines:
 
   ```
     import sys
     import logging
     logging.basicConfig(stream=sys.stderr)
-    sys.path.insert(0, "/var/www/coffeeshop/")
-    from coffeeshop import app as application
+    sys.path.insert(0, "/var/www/flight/")
+    from flight import app as application
     application.secret_key = 'supersecretkey'
   ```
 - Restart Apache: `sudo service apache2 restart`.
-- From the `/var/www/coffeeshop/coffeeshop/` directory, 
+- From the `/var/www/flight/flight/` directory, 
   activate the virtual environment: `. venv3/bin/activate`.
 - Run: `python database_setup.py`.
 - Deactivate the virtual environment: `deactivate`.
@@ -277,7 +277,7 @@ as authorized redirect URI.
 ### Step 13.5: Launch the Web Application
 
 - Restart Apache again: `sudo service apache2 restart`.
-- Open your browser to http://54.191.144.249 or http://ec2-54-191-144-249.us-west-2.compute.amazonaws.com.
+- Open your browser to http://52.33.75.158 or http://ec2-52-33-75-158.us-west-2.compute.amazonaws.com.
 
 
-**Special Thanks to [Anumsh](https://github.com/anumsh/Linux-Server-Configuration)* for a very helpful README in Linux Server Configuration Project-Udacity**
+**Special Thanks to  [Adityamehra](https://github.com/adityamehra/udacity-linux-server-configuration)* for a very helpful README in Linux Server Configuration Project-Udacity**
