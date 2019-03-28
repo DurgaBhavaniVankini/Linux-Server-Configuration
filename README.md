@@ -99,7 +99,7 @@ allows you to install new packages when needed
 ### Step 5: Create a new user account named `grader`
 
 - While logged in as `ubuntu`, add user: `sudo adduser grader`. 
-- Enter a password (twice) and fill out information for this new user.
+- Enter a password `grader`(twice) and fill out information for this new user.
 
 
 ### Step 6: Give `grader` the permission to sudo
